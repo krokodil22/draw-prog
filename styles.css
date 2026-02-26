@@ -29,7 +29,18 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  gap: 22px;
+}
+
+.task {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+  background: #f7f9ff;
+  border: 3px solid #7bc4dd;
+  border-radius: 22px;
+  padding: clamp(12px, 2vw, 22px);
+  box-shadow: 0 8px 24px rgba(79, 29, 188, 0.1);
 }
 
 .brand {
@@ -51,12 +62,29 @@ body {
   letter-spacing: 0.02em;
 }
 
-h1 {
+.task-title {
   margin: 0;
-  text-align: left;
-  color: var(--ink);
-  font-size: clamp(21px, 2.2vw, 32px);
-  line-height: 1.1;
+  display: inline-block;
+  align-self: flex-start;
+  background: linear-gradient(120deg, var(--purple), var(--pink));
+  color: #fff;
+  border-radius: 14px;
+  padding: 6px 12px;
+  font-size: clamp(16px, 1.5vw, 22px);
+}
+
+.task-headline {
+  margin: 0;
+  display: inline-block;
+  align-self: flex-start;
+  background: #83cee6;
+  color: #1b2f74;
+  border-radius: 22px;
+  padding: 10px 16px;
+  max-width: 760px;
+  font-size: clamp(18px, 1.8vw, 30px);
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .code {
@@ -76,7 +104,7 @@ h1 {
   margin-top: 2px;
 }
 
-.hint h2 {
+.hint h3 {
   display: inline-block;
   background: var(--purple);
   color: #f4fbff;
@@ -213,6 +241,75 @@ button {
   transform: scaleX(-1);
 }
 
+
+.logic-text {
+  margin: 0;
+  font-size: clamp(18px, 1.6vw, 26px);
+  color: #1d253c;
+}
+
+.logic-rules {
+  margin: 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 6px;
+}
+
+.logic-rules li {
+  font-size: clamp(18px, 1.6vw, 26px);
+  color: #1d253c;
+}
+
+.animals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.animal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #fff;
+  border: 2px solid #dce8ff;
+}
+
+.animal-name {
+  font-size: clamp(22px, 2.2vw, 34px);
+}
+
+.animal-floor {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(24px, 2.4vw, 36px);
+  color: #1d253c;
+}
+
+.animal-floor input {
+  width: 52px;
+  height: 44px;
+  border-radius: 12px;
+  border: 2px solid #7bc4dd;
+  font-size: 28px;
+  text-align: center;
+  color: #1d253c;
+}
+
+.animal-floor input:focus {
+  outline: 3px solid rgba(90, 183, 217, 0.35);
+}
+
+.logic-success {
+  margin: 0;
+  min-height: 32px;
+  color: #119a6c;
+  font-size: clamp(20px, 1.8vw, 28px);
+  font-weight: 700;
+}
+
 @media (max-width: 900px) {
   .play-area {
     grid-template-columns: 1fr;
@@ -228,12 +325,16 @@ button {
     right: auto;
     left: 34px;
   }
+
+  .animals-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 700px) {
   .page {
     padding: 12px 14px 16px;
-    gap: 8px;
+    gap: 14px;
   }
 
   .code p {
@@ -254,5 +355,9 @@ button {
 
   .character {
     gap: 6px;
+  }
+
+  .animal-floor {
+    font-size: 22px;
   }
 }
