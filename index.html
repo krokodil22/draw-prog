@@ -26,8 +26,17 @@
         <p>Стрелка — направление<br />Цифра — сколько клеток нужно двигаться в направлении.</p>
       </section>
 
-      <section class="board-wrap" aria-label="Поле для рисования">
-        <canvas id="board" width="900" height="650"></canvas>
+      <section class="play-area" aria-label="Область рисования и подсказка персонажа">
+        <section class="board-wrap" aria-label="Поле для рисования">
+          <canvas id="board" width="900" height="650"></canvas>
+        </section>
+
+        <section class="character" aria-label="Подсказка персонажа">
+          <div class="bubble">
+            <p>Это же настоящий алгоритм,<br />как в программировании!</p>
+          </div>
+          <img class="dino" src="dino2.png" alt="Динозаврик подсказывает" />
+        </section>
       </section>
 
       <div class="controls">
@@ -36,13 +45,6 @@
       </div>
 
       <p class="success" id="success" role="status" aria-live="polite"></p>
-
-      <section class="character" aria-label="Подсказка персонажа">
-        <div class="bubble">
-          <p>Это же настоящий алгоритм,<br />как в программировании!</p>
-        </div>
-        <img class="dino" src="dino2.png" alt="Динозаврик подсказывает" />
-      </section>
     </main>
 
     <script src="script.js"></script>

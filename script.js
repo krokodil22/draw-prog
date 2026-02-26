@@ -62,7 +62,7 @@ function buildPath(steps) {
 
 function getBoardGeometry() {
   const availableWidth = Math.max(320, Math.floor(canvas.parentElement.clientWidth));
-  const bottomBlocks = document.querySelectorAll('.controls, .success, .bubble');
+  const bottomBlocks = document.querySelectorAll('.controls, .success');
   const bottomSpace = Array.from(bottomBlocks).reduce((sum, block) => {
     const styles = window.getComputedStyle(block);
     const marginTop = Number.parseFloat(styles.marginTop) || 0;
