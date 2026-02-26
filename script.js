@@ -62,7 +62,7 @@ function buildPath(steps) {
 
 function getBoardGeometry() {
   const availableWidth = Math.max(320, Math.floor(canvas.parentElement.clientWidth));
-  const bottomBlocks = document.querySelectorAll('.controls, .success');
+  const bottomBlocks = document.querySelectorAll('.controls');
   const bottomSpace = Array.from(bottomBlocks).reduce((sum, block) => {
     const styles = window.getComputedStyle(block);
     const marginTop = Number.parseFloat(styles.marginTop) || 0;
@@ -155,8 +155,10 @@ function checkCompletion() {
 function updateSuccessText() {
   if (checkCompletion()) {
     successMessage.textContent = 'Поздравляем! Рисунок выполнен правильно!';
+    successMessage.classList.add('visible');
   } else {
     successMessage.textContent = '';
+    successMessage.classList.remove('visible');
   }
 }
 
@@ -165,6 +167,7 @@ function resetBoard() {
   y = start.y;
   drawnSegments = [];
   successMessage.textContent = '';
+  successMessage.classList.remove('visible');
   redrawAll();
 }
 

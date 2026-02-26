@@ -29,6 +29,7 @@
       <section class="play-area" aria-label="Область рисования и подсказка персонажа">
         <section class="board-wrap" aria-label="Поле для рисования">
           <canvas id="board" width="900" height="650"></canvas>
+          <p class="success-overlay" id="success" role="status" aria-live="polite"></p>
         </section>
 
         <section class="character" aria-label="Подсказка персонажа">
@@ -44,7 +45,6 @@
         <p>Управление: клавиши ← ↑ → ↓</p>
       </div>
 
-      <p class="success" id="success" role="status" aria-live="polite"></p>
     </main>
 
     <script src="script.js"></script>
