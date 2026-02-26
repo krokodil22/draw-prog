@@ -1,15 +1,91 @@
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
-const dot = document.getElementById('dot');
+const feather = document.getElementById('feather');
 const resetButton = document.getElementById('reset');
+const successMessage = document.getElementById('success');
 
 const cols = 16;
-const rows = 12;
-const cell = Math.floor(canvas.width / cols);
+const rows = 15;
+const algorithmRows = [
+  '2↑2→1↑1→2↑1→1↓1→1↑1→1↓1→1↑1→2↓4←',
+  '1↓1←3↓1→1↓7→3↓1←2↑1←6↓1←2↑1←2↑3←',
+  '2↓1←2↓1←5↑1←4↑1←',
+];
 
+const directionByArrow = {
+  '↑': { dx: 0, dy: -1, angle: -75 },
+  '↓': { dx: 0, dy: 1, angle: 75 },
+  '←': { dx: -1, dy: 0, angle: 170 },
+  '→': { dx: 1, dy: 0, angle: 10 },
+};
+
+const expectedSteps = parseAlgorithm(algorithmRows);
+const expectedPath = buildPath(expectedSteps);
+
+let cell = 40;
 let x = 2;
-let y = 2;
+let y = 5;
+let drawnSegments = [];
 const start = { x, y };
+
+function parseAlgorithm(rowsText) {
+  return rowsText.flatMap((rowText) => {
+    const matches = rowText.matchAll(/(\d+)([↑↓←→])/g);
+    const expandedMoves = [];
+
+    for (const match of matches) {
+      const count = Number.parseInt(match[1], 10);
+      const arrow = match[2];
+      const unit = directionByArrow[arrow];
+
+      for (let i = 0; i < count; i += 1) {
+        expandedMoves.push({ dx: unit.dx, dy: unit.dy, angle: unit.angle });
+      }
+    }
+
+    return expandedMoves;
+  });
+}
+
+function buildPath(steps) {
+  let pointX = start.x;
+  let pointY = start.y;
+  const path = [];
+
+  for (const step of steps) {
+    pointX += step.dx;
+    pointY += step.dy;
+    path.push({ x: pointX, y: pointY });
+  }
+
+  return path;
+}
+
+function getBoardGeometry() {
+  const availableWidth = Math.max(300, Math.floor(canvas.parentElement.clientWidth));
+  const freeHeight = window.innerHeight - canvas.getBoundingClientRect().top - 180;
+  const availableHeight = Math.max(260, Math.floor(freeHeight));
+
+  const fitByWidth = Math.floor(availableWidth / cols);
+  const fitByHeight = Math.floor(availableHeight / rows);
+  cell = Math.max(16, Math.min(fitByWidth, fitByHeight));
+
+  return {
+    width: cols * cell,
+    height: rows * cell,
+  };
+}
+
+function resizeBoard() {
+  const { width, height } = getBoardGeometry();
+
+  canvas.width = width;
+  canvas.height = height;
+  canvas.parentElement.style.width = `${width}px`;
+  canvas.parentElement.style.height = `${height}px`;
+
+  redrawAll();
+}
 
 function drawGrid() {
   for (let row = 0; row < rows; row += 1) {
@@ -23,44 +99,81 @@ function drawGrid() {
 
 function drawPathLine(fromX, fromY, toX, toY) {
   ctx.strokeStyle = '#0b1428';
-  ctx.lineWidth = 8;
+  ctx.lineWidth = Math.max(4, Math.floor(cell * 0.16));
   ctx.lineCap = 'round';
   ctx.beginPath();
-  ctx.moveTo(fromX * cell + cell / 2, fromY * cell + cell / 2);
-  ctx.lineTo(toX * cell + cell / 2, toY * cell + cell / 2);
+  ctx.moveTo(fromX * cell, fromY * cell);
+  ctx.lineTo(toX * cell, toY * cell);
   ctx.stroke();
 }
 
-function drawStartDot() {
+function drawStartMarker() {
   ctx.fillStyle = '#0b1428';
   ctx.beginPath();
-  ctx.arc(start.x * cell + cell / 2, start.y * cell + cell / 2, 6, 0, Math.PI * 2);
+  ctx.arc(start.x * cell, start.y * cell, Math.max(4, cell * 0.1), 0, Math.PI * 2);
   ctx.fill();
 }
 
-function placeDot() {
-  dot.style.left = `${((x + 0.5) / cols) * 100}%`;
-  dot.style.top = `${((y + 0.5) / rows) * 100}%`;
+function placeFeather(angle = 15) {
+  feather.style.left = `${x * cell}px`;
+  feather.style.top = `${y * cell}px`;
+  feather.style.transform = `translate(-50%, -60%) rotate(${angle}deg)`;
+}
+
+function redrawAll() {
+  drawGrid();
+
+  let from = { ...start };
+  for (const point of drawnSegments) {
+    drawPathLine(from.x, from.y, point.x, point.y);
+    from = point;
+  }
+
+  drawStartMarker();
+  placeFeather();
+}
+
+function checkCompletion() {
+  if (drawnSegments.length !== expectedPath.length) {
+    return false;
+  }
+
+  return drawnSegments.every((point, index) => {
+    const expectedPoint = expectedPath[index];
+    return point.x === expectedPoint.x && point.y === expectedPoint.y;
+  });
+}
+
+function updateSuccessText() {
+  if (checkCompletion()) {
+    successMessage.textContent = 'Поздравляем! Рисунок выполнен правильно!';
+  } else {
+    successMessage.textContent = '';
+  }
 }
 
 function resetBoard() {
   x = start.x;
   y = start.y;
-  drawGrid();
-  drawStartDot();
-  placeDot();
+  drawnSegments = [];
+  successMessage.textContent = '';
+  redrawAll();
 }
 
 function move(dx, dy) {
-  const nextX = Math.max(0, Math.min(cols - 1, x + dx));
-  const nextY = Math.max(0, Math.min(rows - 1, y + dy));
+  const nextX = Math.max(0, Math.min(cols, x + dx));
+  const nextY = Math.max(0, Math.min(rows, y + dy));
 
   if (nextX === x && nextY === y) return;
 
   drawPathLine(x, y, nextX, nextY);
   x = nextX;
   y = nextY;
-  placeDot();
+  drawnSegments.push({ x, y });
+
+  const direction = Object.values(directionByArrow).find((d) => d.dx === dx && d.dy === dy);
+  placeFeather(direction?.angle ?? 15);
+  updateSuccessText();
 }
 
 window.addEventListener('keydown', (event) => {
@@ -77,6 +190,8 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
+window.addEventListener('resize', resizeBoard);
 resetButton.addEventListener('click', resetBoard);
 
-resetBoard();
+resizeBoard();
+updateSuccessText();

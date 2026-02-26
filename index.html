@@ -11,9 +11,9 @@
       <h1>Нарисуй путь движения пера,<br />чтобы расшифровать послание.</h1>
 
       <section class="code" aria-label="Последовательность шагов">
-        <p>2↑ 2→ 1↑ 1→ 2↑ 1→ 1↓ 1→ 1↑ 1→ 1↓ 1→ 1↑ 1→ 2↓ 4←</p>
-        <p>1↓ 1← 3↓ 1→ 1↓ 7→ 3↓ 1← 2↑ 1← 6↓ 1← 2↑ 1← 2↑ 3←</p>
-        <p>2↓ 1← 2↓ 1← 5↑ 1← 4↑ 1←</p>
+        <p>2↑2→1↑1→2↑1→1↓1→1↑1→1↓1→1↑1→2↓4←</p>
+        <p>1↓1←3↓1→1↓7→3↓1←2↑1←6↓1←2↑1←2↑3←</p>
+        <p>2↓1←2↓1←5↑1←4↑1←</p>
       </section>
 
       <section class="hint">
@@ -22,8 +22,7 @@
       </section>
 
       <section class="board-wrap" aria-label="Поле для рисования">
-        <div class="feather" aria-hidden="true">🪶</div>
-        <div class="dot" id="dot"></div>
+        <div class="feather" id="feather" aria-hidden="true">🪶</div>
         <canvas id="board" width="900" height="650"></canvas>
       </section>
 
@@ -31,6 +30,8 @@
         <button id="reset">Сбросить рисунок</button>
         <p>Управление: клавиши ← ↑ → ↓</p>
       </div>
+
+      <p class="success" id="success" role="status" aria-live="polite"></p>
 
       <section class="bubble">
         <p>Это же настоящий алгоритм,<br />как в программировании!</p>
