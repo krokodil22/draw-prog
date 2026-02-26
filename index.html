@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Космо-рисовалка</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="panel code-panel">
+        <h1>Космо-цитата</h1>
+        <pre><code>&lt;script&gt;
+const f = [
+"На Марсе есть самая высокая гора",
+"Сатурн известен своими кольцами",
+"В космосе нельзя услышать звук",
+"Звёзды — это огромные раскалённые шары из газа"
+];
+
+function show(){
+  box.innerHTML = f[(Math.random()*f.length)|0];
+}
+&lt;/script&gt;</code></pre>
+        <button id="quoteBtn">Показать случайный факт</button>
+        <p id="factBox" class="fact-box">Нажми кнопку, чтобы получить космический факт.</p>
+      </section>
+
+      <section class="panel draw-panel">
+        <h2>Рисование стрелками</h2>
+        <p class="help">
+          Управление: ← ↑ → ↓. Пробел — поставить точку. <kbd>C</kbd> — очистить.
+        </p>
+        <canvas id="board" width="640" height="420" aria-label="Поле для рисования"></canvas>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
