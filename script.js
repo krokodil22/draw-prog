@@ -61,9 +61,17 @@ function buildPath(steps) {
 }
 
 function getBoardGeometry() {
-  const availableWidth = Math.max(420, Math.floor(canvas.parentElement.clientWidth));
-  const freeHeight = window.innerHeight - canvas.getBoundingClientRect().top - 72;
-  const availableHeight = Math.max(420, Math.floor(freeHeight));
+  const availableWidth = Math.max(320, Math.floor(canvas.parentElement.clientWidth));
+  const bottomBlocks = document.querySelectorAll('.controls, .success, .bubble');
+  const bottomSpace = Array.from(bottomBlocks).reduce((sum, block) => {
+    const styles = window.getComputedStyle(block);
+    const marginTop = Number.parseFloat(styles.marginTop) || 0;
+    const marginBottom = Number.parseFloat(styles.marginBottom) || 0;
+    return sum + block.offsetHeight + marginTop + marginBottom;
+  }, 0);
+
+  const freeHeight = window.innerHeight - canvas.getBoundingClientRect().top - bottomSpace - 16;
+  const availableHeight = Math.max(240, Math.floor(freeHeight));
 
   const fitByWidth = Math.floor(availableWidth / cols);
   const fitByHeight = Math.floor(availableHeight / rows);
