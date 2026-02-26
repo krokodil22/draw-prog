@@ -254,11 +254,6 @@ button {
   flex: 0 0 auto;
 }
 
-.logic-text-wrap {
-  display: grid;
-  gap: 8px;
-}
-
 .logic-text {
   margin: 0;
   font-size: clamp(18px, 1.6vw, 26px);
