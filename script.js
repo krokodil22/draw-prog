@@ -2,6 +2,8 @@ const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
 const resetButton = document.getElementById('reset');
 const successMessage = document.getElementById('success');
+const logicInputs = document.querySelectorAll('.animal-floor input');
+const logicSuccessMessage = document.getElementById('logic-success');
 
 const cols = 16;
 const rows = 15;
@@ -10,6 +12,13 @@ const algorithmRows = [
   '1↓1←3↓1→1↓7→3↓1←2↑1←6↓1←2↑1←2↑3←',
   '2↓1←2↓1←5↑1←4↑1←',
 ];
+
+const logicAnswers = {
+  rabbit: '3',
+  fox: '5',
+  mouse: '4',
+  elephant: '2',
+};
 
 const directionByArrow = {
   '↑': { dx: 0, dy: -1 },
@@ -186,6 +195,24 @@ function move(dx, dy) {
   updateSuccessText();
 }
 
+function checkLogicTask() {
+  const allCorrect = Array.from(logicInputs).every((input) => {
+    const expectedValue = logicAnswers[input.dataset.animal];
+    return input.value === expectedValue;
+  });
+
+  logicSuccessMessage.textContent = allCorrect
+    ? 'Поздравляем! Все животные расселены правильно!'
+    : '';
+}
+
+logicInputs.forEach((input) => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/[^0-9]/g, '').slice(0, 1);
+    checkLogicTask();
+  });
+});
+
 window.addEventListener('keydown', (event) => {
   const keyActions = {
     ArrowUp: () => move(0, -1),
@@ -205,3 +232,4 @@ resetButton.addEventListener('click', resetBoard);
 
 resizeBoard();
 updateSuccessText();
+checkLogicTask();

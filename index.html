@@ -13,38 +13,77 @@
         <span class="brand-name">Tetrika</span>
       </div>
 
-      <h1>Нарисуй путь движения пера,<br />чтобы расшифровать послание.</h1>
+      <section class="task" aria-label="Задание 1">
+        <h2 class="task-title">Задание 1</h2>
+        <h1 class="task-headline">Нарисуй путь движения пера,<br />чтобы расшифровать послание.</h1>
 
-      <section class="code" aria-label="Последовательность шагов">
-        <p>2↑2→1↑1→2↑1→1↓1→1↑1→1↓1→1↑1→2↓4←</p>
-        <p>1↓1←3↓1→1↓7→3↓1←2↑1←6↓1←2↑1←2↑3←</p>
-        <p>2↓1←2↓1←5↑1←4↑1←</p>
-      </section>
-
-      <section class="hint">
-        <h2>Подсказки:</h2>
-        <p>Стрелка — направление<br />Цифра — сколько клеток нужно двигаться в направлении.</p>
-      </section>
-
-      <section class="play-area" aria-label="Область рисования и подсказка персонажа">
-        <section class="board-wrap" aria-label="Поле для рисования">
-          <canvas id="board" width="900" height="650"></canvas>
-          <p class="success-overlay" id="success" role="status" aria-live="polite"></p>
+        <section class="code" aria-label="Последовательность шагов">
+          <p>2↑2→1↑1→2↑1→1↓1→1↑1→1↓1→1↑1→2↓4←</p>
+          <p>1↓1←3↓1→1↓7→3↓1←2↑1←6↓1←2↑1←2↑3←</p>
+          <p>2↓1←2↓1←5↑1←4↑1←</p>
         </section>
 
-        <section class="character" aria-label="Подсказка персонажа">
-          <div class="bubble">
-            <p>Это же настоящий алгоритм,<br />как в программировании!</p>
-          </div>
-          <img class="dino" src="dino2.png" alt="Динозаврик подсказывает" />
+        <section class="hint">
+          <h3>Подсказки:</h3>
+          <p>Стрелка — направление<br />Цифра — сколько клеток нужно двигаться в направлении.</p>
         </section>
+
+        <section class="play-area" aria-label="Область рисования и подсказка персонажа">
+          <section class="board-wrap" aria-label="Поле для рисования">
+            <canvas id="board" width="900" height="650"></canvas>
+            <p class="success-overlay" id="success" role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="character" aria-label="Подсказка персонажа">
+            <div class="bubble">
+              <p>Это же настоящий алгоритм,<br />как в программировании!</p>
+            </div>
+            <img class="dino" src="dino2.png" alt="Динозаврик подсказывает" />
+          </section>
+        </section>
+
+        <div class="controls">
+          <button id="reset">Сбросить рисунок</button>
+          <p>Управление: клавиши ← ↑ → ↓</p>
+        </div>
       </section>
 
-      <div class="controls">
-        <button id="reset">Сбросить рисунок</button>
-        <p>Управление: клавиши ← ↑ → ↓</p>
-      </div>
+      <section class="task task-logic" aria-label="Задание 2">
+        <h2 class="task-title">Задание 2</h2>
 
+        <h3 class="task-headline">Используй логику! Без логики в программировании никак не обойтись!</h3>
+
+        <p class="logic-text">В этом доме на каждом этаже живут разные животные. Вот что нам известно:</p>
+        <ul class="logic-rules">
+          <li>на первом этаже никто не живет</li>
+          <li>зайцы живут над слонами</li>
+          <li>мыши живут под лисами</li>
+          <li>лисы живут на последнем этаже</li>
+        </ul>
+
+        <p class="logic-text">Помоги правильно расселить животных! Впиши этаж для каждого животного!</p>
+
+        <div class="animals-grid" id="animals-grid">
+          <label class="animal-card">
+            <span class="animal-name">🐇 Заяц</span>
+            <span class="animal-floor">Этаж: <input data-animal="rabbit" inputmode="numeric" maxlength="1" aria-label="Этаж для зайца" /></span>
+          </label>
+          <label class="animal-card">
+            <span class="animal-name">🦊 Лиса</span>
+            <span class="animal-floor">Этаж: <input data-animal="fox" inputmode="numeric" maxlength="1" aria-label="Этаж для лисы" /></span>
+          </label>
+          <label class="animal-card">
+            <span class="animal-name">🐭 Мышь</span>
+            <span class="animal-floor">Этаж: <input data-animal="mouse" inputmode="numeric" maxlength="1" aria-label="Этаж для мыши" /></span>
+          </label>
+          <label class="animal-card">
+            <span class="animal-name">🐘 Слон</span>
+            <span class="animal-floor">Этаж: <input data-animal="elephant" inputmode="numeric" maxlength="1" aria-label="Этаж для слона" /></span>
+          </label>
+        </div>
+
+        <p class="logic-success" id="logic-success" role="status" aria-live="polite"></p>
+      </section>
     </main>
 
     <script src="script.js"></script>
