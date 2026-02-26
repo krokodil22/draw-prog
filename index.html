@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Нарисуй путь пера</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Нарисуй путь движения пера,<br />чтобы расшифровать послание.</h1>
+
+      <section class="code" aria-label="Последовательность шагов">
+        <p>2↑ 2→ 1↑ 1→ 2↑ 1→ 1↓ 1→ 1↑ 1→ 1↓ 1→ 1↑ 1→ 2↓ 4←</p>
+        <p>1↓ 1← 3↓ 1→ 1↓ 7→ 3↓ 1← 2↑ 1← 6↓ 1← 2↑ 1← 2↑ 3←</p>
+        <p>2↓ 1← 2↓ 1← 5↑ 1← 4↑ 1←</p>
+      </section>
+
+      <section class="hint">
+        <h2>Подсказки:</h2>
+        <p>Стрелка — направление<br />Цифра — сколько клеток нужно двигаться в направлении.</p>
+      </section>
+
+      <section class="board-wrap" aria-label="Поле для рисования">
+        <div class="feather" aria-hidden="true">🪶</div>
+        <div class="dot" id="dot"></div>
+        <canvas id="board" width="900" height="650"></canvas>
+      </section>
+
+      <div class="controls">
+        <button id="reset">Сбросить рисунок</button>
+        <p>Управление: клавиши ← ↑ → ↓</p>
+      </div>
+
+      <section class="bubble">
+        <p>Это же настоящий алгоритм,<br />как в программировании!</p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
