@@ -1,10 +1,13 @@
 :root {
-  --bg: #ececec;
-  --ink: #151834;
-  --blue: #71bddb;
-  --cell-light: #f4f4f4;
-  --cell-blue: #71b7d3;
-  --line: #0a1326;
+  --bg: #f5f1ff;
+  --ink: #4f1dbc;
+  --purple: #7e33dd;
+  --pink: #e95bb7;
+  --green: #18c48a;
+  --blue: #5ab7d9;
+  --cell-light: #f7f4ff;
+  --cell-blue: #dbf2fb;
+  --line: #5620b9;
 }
 
 * {
@@ -22,46 +25,67 @@ body {
 .page {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 16px 20px 20px;
+  padding: 12px 20px 14px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-h1 {
-  margin: 0 0 12px;
-  text-align: center;
-  color: var(--ink);
-  font-size: clamp(26px, 3.2vw, 44px);
-  line-height: 1.12;
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-bottom: 6px;
 }
 
-.code p {
-  margin: 0 0 8px;
-  font-size: clamp(24px, 2.5vw, 34px);
-  font-weight: 700;
+.logo {
+  width: clamp(58px, 8vw, 92px);
+  height: auto;
+}
+
+.brand-name {
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 800;
+  color: var(--purple);
   letter-spacing: 0.02em;
 }
 
+h1 {
+  margin: 0 0 8px;
+  text-align: left;
+  color: var(--ink);
+  font-size: clamp(22px, 2.4vw, 34px);
+  line-height: 1.08;
+}
+
+.code p {
+  margin: 0 0 6px;
+  font-size: clamp(18px, 1.85vw, 26px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #4e2598;
+}
+
 .hint {
-  margin: 14px 0 12px;
+  margin: 10px 0 8px;
 }
 
 .hint h2 {
   display: inline-block;
-  background: var(--blue);
+  background: var(--purple);
   color: #f4fbff;
-  border-radius: 22px;
-  margin: 0 0 8px;
-  padding: 6px 14px;
-  font-size: clamp(20px, 2.1vw, 30px);
+  border-radius: 20px;
+  margin: 0 0 6px;
+  padding: 5px 12px;
+  font-size: clamp(16px, 1.7vw, 24px);
 }
 
 .hint p {
   margin: 0;
-  font-size: clamp(18px, 1.9vw, 28px);
+  font-size: clamp(15px, 1.4vw, 21px);
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .board-wrap {
@@ -69,8 +93,8 @@ h1 {
   width: 100%;
   max-width: 1220px;
   margin: 0 auto;
-  border: 4px solid var(--blue);
-  border-radius: 34px;
+  border: 4px solid var(--green);
+  border-radius: 28px;
   overflow: hidden;
   background: var(--cell-light);
   flex: 1 1 auto;
@@ -84,7 +108,7 @@ h1 {
 }
 
 .controls {
-  margin: 10px 0 4px;
+  margin: 8px 0 2px;
   display: flex;
   gap: 16px;
   align-items: center;
@@ -93,71 +117,92 @@ h1 {
 
 button {
   border: 0;
-  background: #1d3058;
+  background: linear-gradient(120deg, var(--purple), var(--pink));
   color: #fff;
-  border-radius: 12px;
-  padding: 8px 14px;
-  font-size: 16px;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 14px;
   cursor: pointer;
 }
 
 .controls p {
   margin: 0;
-  font-size: 18px;
-  color: #25335f;
+  font-size: 16px;
+  color: #4f1dbc;
   font-weight: 600;
 }
 
 .success {
-  margin: 6px 0 8px;
-  font-size: clamp(18px, 1.8vw, 26px);
+  margin: 4px 0 6px;
+  font-size: clamp(16px, 1.5vw, 22px);
   font-weight: 700;
-  color: #0e6d37;
+  color: #119a6c;
   min-height: 1.4em;
 }
 
-.bubble {
-  margin-top: 10px;
+.character {
+  margin-top: 8px;
   margin-left: auto;
-  max-width: 560px;
-  background: #8dc6df;
-  color: #232d63;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.bubble {
+  max-width: 430px;
+  background: #ffffff;
+  color: #4a1eb2;
+  border: 3px solid var(--blue);
   border-radius: 28px;
-  padding: 18px 24px;
+  padding: 12px 16px;
   position: relative;
 }
 
 .bubble::after {
   content: "";
   position: absolute;
-  right: 50px;
-  bottom: -24px;
-  border-top: 26px solid #8dc6df;
-  border-left: 24px solid transparent;
-  border-right: 24px solid transparent;
+  right: 34px;
+  bottom: -14px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-right: 3px solid var(--blue);
+  border-bottom: 3px solid var(--blue);
+  transform: rotate(45deg);
 }
 
 .bubble p {
   margin: 0;
-  font-size: clamp(20px, 2vw, 30px);
+  font-size: clamp(15px, 1.4vw, 20px);
   font-weight: 700;
-  line-height: 1.14;
+  line-height: 1.12;
+}
+
+.dino {
+  width: clamp(88px, 10vw, 130px);
+  height: auto;
+  transform: scaleX(-1);
 }
 
 @media (max-width: 700px) {
   .code p {
-    font-size: 20px;
+    font-size: 16px;
   }
 
   .hint p {
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .controls p {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .bubble p {
-    font-size: 18px;
+    font-size: 14px;
+  }
+
+  .character {
+    gap: 6px;
   }
 }

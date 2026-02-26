@@ -98,14 +98,14 @@ function drawGrid() {
   for (let row = 0; row < rows; row += 1) {
     for (let col = 0; col < cols; col += 1) {
       const isBlue = (col + row) % 2 === 1;
-      ctx.fillStyle = isBlue ? '#71b7d3' : '#f4f4f4';
+      ctx.fillStyle = isBlue ? '#dbf2fb' : '#f7f4ff';
       ctx.fillRect(col * cell, row * cell, cell, cell);
     }
   }
 }
 
 function drawPathLine(fromX, fromY, toX, toY) {
-  ctx.strokeStyle = '#0b1428';
+  ctx.strokeStyle = '#5a26be';
   ctx.lineWidth = Math.max(4, Math.floor(cell * 0.16));
   ctx.lineCap = 'round';
   ctx.beginPath();
@@ -115,14 +115,14 @@ function drawPathLine(fromX, fromY, toX, toY) {
 }
 
 function drawStartMarker() {
-  ctx.fillStyle = '#0b1428';
+  ctx.fillStyle = '#5a26be';
   ctx.beginPath();
   ctx.arc(start.x * cell, start.y * cell, Math.max(4, cell * 0.1), 0, Math.PI * 2);
   ctx.fill();
 }
 
 function drawCursorDot() {
-  ctx.fillStyle = '#dc1b35';
+  ctx.fillStyle = '#e95bb7';
   ctx.beginPath();
   ctx.arc(x * cell, y * cell, Math.max(6, cell * 0.15), 0, Math.PI * 2);
   ctx.fill();
