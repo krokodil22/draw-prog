@@ -242,6 +242,18 @@ button {
 }
 
 
+.logic-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(12px, 1.8vw, 24px);
+}
+
+.logic-house {
+  width: clamp(90px, 11vw, 150px);
+  height: auto;
+  flex: 0 0 auto;
+}
+
 .logic-text {
   margin: 0;
   font-size: clamp(18px, 1.6vw, 26px);
@@ -328,6 +340,10 @@ button {
 
   .animals-grid {
     grid-template-columns: 1fr;
+  }
+
+  .logic-intro {
+    align-items: center;
   }
 }
 
