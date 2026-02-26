@@ -1,6 +1,5 @@
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
-const feather = document.getElementById('feather');
 const resetButton = document.getElementById('reset');
 const successMessage = document.getElementById('success');
 
@@ -13,10 +12,10 @@ const algorithmRows = [
 ];
 
 const directionByArrow = {
-  '↑': { dx: 0, dy: -1, angle: -75 },
-  '↓': { dx: 0, dy: 1, angle: 75 },
-  '←': { dx: -1, dy: 0, angle: 170 },
-  '→': { dx: 1, dy: 0, angle: 10 },
+  '↑': { dx: 0, dy: -1 },
+  '↓': { dx: 0, dy: 1 },
+  '←': { dx: -1, dy: 0 },
+  '→': { dx: 1, dy: 0 },
 };
 
 const start = { x: 2, y: 5 };
@@ -39,7 +38,7 @@ function parseAlgorithm(rowsText) {
       const unit = directionByArrow[arrow];
 
       for (let i = 0; i < count; i += 1) {
-        expandedMoves.push({ dx: unit.dx, dy: unit.dy, angle: unit.angle });
+        expandedMoves.push({ dx: unit.dx, dy: unit.dy });
       }
     }
 
@@ -62,13 +61,13 @@ function buildPath(steps) {
 }
 
 function getBoardGeometry() {
-  const availableWidth = Math.max(300, Math.floor(canvas.parentElement.clientWidth));
-  const freeHeight = window.innerHeight - canvas.getBoundingClientRect().top - 180;
-  const availableHeight = Math.max(260, Math.floor(freeHeight));
+  const availableWidth = Math.max(420, Math.floor(canvas.parentElement.clientWidth));
+  const freeHeight = window.innerHeight - canvas.getBoundingClientRect().top - 72;
+  const availableHeight = Math.max(420, Math.floor(freeHeight));
 
   const fitByWidth = Math.floor(availableWidth / cols);
   const fitByHeight = Math.floor(availableHeight / rows);
-  cell = Math.max(16, Math.min(fitByWidth, fitByHeight));
+  cell = Math.max(24, Math.min(fitByWidth, fitByHeight));
 
   return {
     width: cols * cell,
@@ -114,10 +113,11 @@ function drawStartMarker() {
   ctx.fill();
 }
 
-function placeFeather(angle = 15) {
-  feather.style.left = `${x * cell}px`;
-  feather.style.top = `${y * cell}px`;
-  feather.style.transform = `translate(-50%, -60%) rotate(${angle}deg)`;
+function drawCursorDot() {
+  ctx.fillStyle = '#dc1b35';
+  ctx.beginPath();
+  ctx.arc(x * cell, y * cell, Math.max(6, cell * 0.15), 0, Math.PI * 2);
+  ctx.fill();
 }
 
 function redrawAll() {
@@ -130,7 +130,7 @@ function redrawAll() {
   }
 
   drawStartMarker();
-  placeFeather();
+  drawCursorDot();
 }
 
 function checkCompletion() {
@@ -171,8 +171,7 @@ function move(dx, dy) {
   y = nextY;
   drawnSegments.push({ x, y });
 
-  const direction = Object.values(directionByArrow).find((d) => d.dx === dx && d.dy === dy);
-  placeFeather(direction?.angle ?? 15);
+  drawCursorDot();
   updateSuccessText();
 }
 
