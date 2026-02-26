@@ -19,14 +19,14 @@ const directionByArrow = {
   '→': { dx: 1, dy: 0, angle: 10 },
 };
 
+const start = { x: 2, y: 5 };
 const expectedSteps = parseAlgorithm(algorithmRows);
 const expectedPath = buildPath(expectedSteps);
 
 let cell = 40;
-let x = 2;
-let y = 5;
+let x = start.x;
+let y = start.y;
 let drawnSegments = [];
-const start = { x, y };
 
 function parseAlgorithm(rowsText) {
   return rowsText.flatMap((rowText) => {
@@ -161,8 +161,8 @@ function resetBoard() {
 }
 
 function move(dx, dy) {
-  const nextX = Math.max(0, Math.min(cols, x + dx));
-  const nextY = Math.max(0, Math.min(rows, y + dy));
+  const nextX = Math.max(0, Math.min(cols - 1, x + dx));
+  const nextY = Math.max(0, Math.min(rows - 1, y + dy));
 
   if (nextX === x && nextY === y) return;
 
