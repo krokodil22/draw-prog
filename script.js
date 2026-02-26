@@ -4,6 +4,9 @@ const resetButton = document.getElementById('reset');
 const successMessage = document.getElementById('success');
 const logicInputs = document.querySelectorAll('.animal-floor input');
 const logicSuccessMessage = document.getElementById('logic-success');
+const completionModal = document.getElementById('completion-modal');
+const completionCloseButton = document.getElementById('completion-close');
+const fireworksContainer = document.getElementById('fireworks');
 
 const cols = 16;
 const rows = 15;
@@ -35,6 +38,43 @@ let cell = 40;
 let x = start.x;
 let y = start.y;
 let drawnSegments = [];
+
+const fireworkPalette = ['#ff6b6b', '#feca57', '#48dbfb', '#1dd1a1', '#5f27cd', '#ff9ff3'];
+
+let allTasksCelebrated = false;
+
+function createFireworks() {
+  fireworksContainer.innerHTML = '';
+
+  for (let i = 0; i < 14; i += 1) {
+    const firework = document.createElement('span');
+    firework.className = 'firework';
+    firework.style.setProperty('--x', `${10 + Math.random() * 80}%`);
+    firework.style.setProperty('--y', `${10 + Math.random() * 80}%`);
+    firework.style.setProperty('--size', `${10 + Math.random() * 12}px`);
+    firework.style.color = fireworkPalette[i % fireworkPalette.length];
+    firework.style.animationDelay = `${Math.random() * 1.5}s`;
+    fireworksContainer.appendChild(firework);
+  }
+}
+
+function closeCompletionModal() {
+  completionModal.classList.remove('visible');
+}
+
+function celebrateAllTasks() {
+  if (allTasksCelebrated) return;
+
+  allTasksCelebrated = true;
+  createFireworks();
+  completionModal.classList.add('visible');
+}
+
+function checkAllTasksCompletion() {
+  if (checkCompletion() && checkLogicTask()) {
+    celebrateAllTasks();
+  }
+}
 
 function parseAlgorithm(rowsText) {
   return rowsText.flatMap((rowText) => {
@@ -165,6 +205,7 @@ function updateSuccessText() {
   if (checkCompletion()) {
     successMessage.textContent = 'Поздравляем! Рисунок выполнен правильно!';
     successMessage.classList.add('visible');
+    checkAllTasksCompletion();
   } else {
     successMessage.textContent = '';
     successMessage.classList.remove('visible');
@@ -204,12 +245,15 @@ function checkLogicTask() {
   logicSuccessMessage.textContent = allCorrect
     ? 'Поздравляем! Все животные расселены правильно!'
     : '';
+
+  return allCorrect;
 }
 
 logicInputs.forEach((input) => {
   input.addEventListener('input', () => {
     input.value = input.value.replace(/[^0-9]/g, '').slice(0, 1);
     checkLogicTask();
+    checkAllTasksCompletion();
   });
 });
 
@@ -229,6 +273,12 @@ window.addEventListener('keydown', (event) => {
 
 window.addEventListener('resize', resizeBoard);
 resetButton.addEventListener('click', resetBoard);
+completionCloseButton.addEventListener('click', closeCompletionModal);
+completionModal.addEventListener('click', (event) => {
+  if (event.target === completionModal) {
+    closeCompletionModal();
+  }
+});
 
 resizeBoard();
 updateSuccessText();
