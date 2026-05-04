@@ -321,6 +321,18 @@ button {
   font-weight: 700;
 }
 
+
+.video-wrap {
+  width: min(100%, 720px);
+}
+
+.video-wrap iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border-radius: 12px;
+}
+
 .monster-task {
   display: grid;
   gap: 12px;
