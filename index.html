@@ -87,6 +87,49 @@
 
         <p class="logic-success" id="logic-success" role="status" aria-live="polite"></p>
       </section>
+
+      <section class="task task-monsters" aria-label="Задание 4">
+        <h2 class="task-title">Задание 4</h2>
+        <h3 class="task-headline">Угадай, где живет каждый монстрик, и соедини его с домиком.</h3>
+
+        <p class="logic-text">
+          На улице живут 5 монстриков: красный, синий, зеленый, черный и желтый.<br />
+          • красный монстрик живет посередине улицы<br />
+          • черный монстрик живет не в первом и не в последнем доме<br />
+          • желтый монстрик живет в самом маленьком доме<br />
+          • зеленый монстрик живет рядом с черным
+        </p>
+
+        <div class="monster-task">
+          <div class="monster-list" aria-label="Монстрики для перетаскивания">
+            <img class="monster" id="monster-red" src="red.svg" alt="Красный монстрик" draggable="true" data-monster="red" />
+            <img class="monster" id="monster-blue" src="blue.svg" alt="Синий монстрик" draggable="true" data-monster="blue" />
+            <img class="monster" id="monster-green" src="green.svg" alt="Зеленый монстрик" draggable="true" data-monster="green" />
+            <img class="monster" id="monster-black" src="black.svg" alt="Черный монстрик" draggable="true" data-monster="black" />
+            <img class="monster" id="monster-yellow" src="yellow.svg" alt="Желтый монстрик" draggable="true" data-monster="yellow" />
+          </div>
+
+          <div class="houses-row" aria-label="Домики">
+            <div class="house-slot" data-house="house1">
+              <img src="house1.svg" alt="Домик 1" />
+            </div>
+            <div class="house-slot" data-house="house2">
+              <img src="house2.svg" alt="Домик 2" />
+            </div>
+            <div class="house-slot" data-house="house3">
+              <img src="house3.svg" alt="Домик 3" />
+            </div>
+            <div class="house-slot" data-house="house4">
+              <img src="house4.svg" alt="Домик 4" />
+            </div>
+            <div class="house-slot" data-house="house5">
+              <img src="house5.svg" alt="Домик 5" />
+            </div>
+          </div>
+        </div>
+        <button id="monsters-reset" type="button">Сбросить монстриков</button>
+        <p class="logic-success" id="monsters-success" role="status" aria-live="polite"></p>
+      </section>
     </main>
 
     <div class="completion-modal" id="completion-modal" role="dialog" aria-modal="true" aria-labelledby="completion-title">

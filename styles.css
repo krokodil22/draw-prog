@@ -322,6 +322,54 @@ button {
   font-weight: 700;
 }
 
+.monster-task {
+  display: grid;
+  gap: 12px;
+}
+
+.monster-list,
+.houses-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(90px, 1fr));
+  gap: 10px;
+}
+
+.monster {
+  width: 100%;
+  max-width: 120px;
+  justify-self: center;
+  cursor: grab;
+}
+
+.house-slot {
+  border: 2px dashed #7bc4dd;
+  border-radius: 14px;
+  padding: 8px;
+  min-height: 138px;
+  display: grid;
+  justify-items: center;
+  align-items: end;
+  background: #fff;
+}
+
+.house-slot > img {
+  width: 100%;
+  max-width: 120px;
+}
+
+.house-slot .monster {
+  max-width: 82px;
+  margin-bottom: 4px;
+}
+
+.house-correct {
+  border-color: #18c48a;
+}
+
+.house-wrong {
+  border-color: #f05d7f;
+}
+
 @media (max-width: 900px) {
   .play-area {
     grid-template-columns: 1fr;
@@ -340,6 +388,11 @@ button {
 
   .animals-grid {
     grid-template-columns: 1fr;
+  }
+
+  .monster-list,
+  .houses-row {
+    grid-template-columns: repeat(3, minmax(80px, 1fr));
   }
 
   .logic-intro {
@@ -375,6 +428,11 @@ button {
 
   .animal-floor {
     font-size: 22px;
+  }
+
+  .monster-list,
+  .houses-row {
+    grid-template-columns: repeat(2, minmax(80px, 1fr));
   }
 }
 
