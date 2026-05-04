@@ -7,6 +7,10 @@ const logicSuccessMessage = document.getElementById('logic-success');
 const completionModal = document.getElementById('completion-modal');
 const completionCloseButton = document.getElementById('completion-close');
 const fireworksContainer = document.getElementById('fireworks');
+const monsters = document.querySelectorAll('.monster');
+const houseSlots = document.querySelectorAll('.house-slot');
+const monstersResetButton = document.getElementById('monsters-reset');
+const monstersSuccessMessage = document.getElementById('monsters-success');
 
 const cols = 16;
 const rows = 15;
@@ -42,6 +46,15 @@ let drawnSegments = [];
 const fireworkPalette = ['#ff6b6b', '#feca57', '#48dbfb', '#1dd1a1', '#5f27cd', '#ff9ff3'];
 
 let allTasksCelebrated = false;
+let draggedMonsterId = null;
+
+const monsterAnswers = {
+  red: 'house3',
+  blue: 'house2',
+  green: 'house5',
+  black: 'house4',
+  yellow: 'house1',
+};
 
 function createFireworks() {
   fireworksContainer.innerHTML = '';
@@ -71,7 +84,7 @@ function celebrateAllTasks() {
 }
 
 function checkAllTasksCompletion() {
-  if (checkCompletion() && checkLogicTask()) {
+  if (checkCompletion() && checkLogicTask() && checkMonsterTask()) {
     celebrateAllTasks();
   }
 }
@@ -249,6 +262,45 @@ function checkLogicTask() {
   return allCorrect;
 }
 
+function resetMonsters() {
+  const list = document.querySelector('.monster-list');
+  monsters.forEach((monster) => list.appendChild(monster));
+  monstersSuccessMessage.textContent = '';
+  houseSlots.forEach((slot) => slot.classList.remove('house-correct', 'house-wrong'));
+}
+
+function checkMonsterTask() {
+  const placedMonsters = Array.from(houseSlots).flatMap((slot) =>
+    Array.from(slot.querySelectorAll('.monster')).map((monster) => ({
+      house: slot.dataset.house,
+      monster: monster.dataset.monster,
+    })),
+  );
+
+  if (placedMonsters.length !== monsters.length) {
+    monstersSuccessMessage.textContent = '';
+    return false;
+  }
+
+  const allCorrect = placedMonsters.every(
+    (placement) => monsterAnswers[placement.monster] === placement.house,
+  );
+
+  houseSlots.forEach((slot) => {
+    const monster = slot.querySelector('.monster');
+    if (!monster) return;
+    const correctHouse = monsterAnswers[monster.dataset.monster];
+    slot.classList.toggle('house-correct', correctHouse === slot.dataset.house);
+    slot.classList.toggle('house-wrong', correctHouse !== slot.dataset.house);
+  });
+
+  monstersSuccessMessage.textContent = allCorrect
+    ? 'Отлично! Все монстрики живут в правильных домиках!'
+    : '';
+
+  return allCorrect;
+}
+
 logicInputs.forEach((input) => {
   input.addEventListener('input', () => {
     input.value = input.value.replace(/[^0-9]/g, '').slice(0, 1);
@@ -256,6 +308,31 @@ logicInputs.forEach((input) => {
     checkAllTasksCompletion();
   });
 });
+
+monsters.forEach((monster) => {
+  monster.addEventListener('dragstart', (event) => {
+    draggedMonsterId = monster.id;
+    event.dataTransfer.setData('text/plain', monster.id);
+  });
+});
+
+houseSlots.forEach((slot) => {
+  slot.addEventListener('dragover', (event) => {
+    event.preventDefault();
+  });
+
+  slot.addEventListener('drop', (event) => {
+    event.preventDefault();
+    const id = event.dataTransfer.getData('text/plain') || draggedMonsterId;
+    const monster = document.getElementById(id);
+    if (!monster) return;
+    slot.appendChild(monster);
+    checkMonsterTask();
+    checkAllTasksCompletion();
+  });
+});
+
+monstersResetButton.addEventListener('click', resetMonsters);
 
 window.addEventListener('keydown', (event) => {
   const keyActions = {
@@ -283,3 +360,4 @@ completionModal.addEventListener('click', (event) => {
 resizeBoard();
 updateSuccessText();
 checkLogicTask();
+checkMonsterTask();
