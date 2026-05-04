@@ -81,7 +81,6 @@ body {
   color: #1b2f74;
   border-radius: 16px;
   padding: 8px 12px;
-  max-width: 760px;
   font-size: clamp(16px, 1.4vw, 24px);
   font-weight: 700;
   line-height: 1.15;
