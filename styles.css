@@ -255,7 +255,7 @@ button {
 
 .logic-text {
   margin: 0;
-  font-size: clamp(16px, 1.2vw, 20px);
+  font-size: clamp(18px, 1.2vw, 22px);
   color: #1d253c;
 }
 
