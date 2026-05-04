@@ -25,21 +25,21 @@ body {
 .page {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 14px 24px 20px;
+  padding: 10px 18px 14px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 14px;
 }
 
 .task {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   background: #f7f9ff;
   border: 3px solid #7bc4dd;
-  border-radius: 22px;
-  padding: clamp(12px, 2vw, 22px);
+  border-radius: 18px;
+  padding: clamp(10px, 1.4vw, 16px);
   box-shadow: 0 8px 24px rgba(79, 29, 188, 0.1);
 }
 
@@ -69,8 +69,8 @@ body {
   background: linear-gradient(120deg, var(--purple), var(--pink));
   color: #fff;
   border-radius: 14px;
-  padding: 6px 12px;
-  font-size: clamp(16px, 1.5vw, 22px);
+  padding: 5px 10px;
+  font-size: clamp(14px, 1.2vw, 18px);
 }
 
 .task-headline {
@@ -79,10 +79,10 @@ body {
   align-self: flex-start;
   background: #83cee6;
   color: #1b2f74;
-  border-radius: 22px;
-  padding: 10px 16px;
+  border-radius: 16px;
+  padding: 8px 12px;
   max-width: 760px;
-  font-size: clamp(18px, 1.8vw, 30px);
+  font-size: clamp(16px, 1.4vw, 24px);
   font-weight: 700;
   line-height: 1.15;
 }
@@ -94,7 +94,7 @@ body {
 
 .code p {
   margin: 0;
-  font-size: clamp(18px, 1.85vw, 26px);
+  font-size: clamp(15px, 1.3vw, 20px);
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #4e2598;
@@ -110,13 +110,13 @@ body {
   color: #f4fbff;
   border-radius: 20px;
   margin: 0 0 6px;
-  padding: 5px 12px;
-  font-size: clamp(16px, 1.7vw, 24px);
+  padding: 4px 10px;
+  font-size: clamp(14px, 1.3vw, 18px);
 }
 
 .hint p {
   margin: 0;
-  font-size: clamp(15px, 1.4vw, 21px);
+  font-size: clamp(13px, 1.1vw, 16px);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -125,7 +125,7 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) clamp(190px, 24vw, 320px);
   align-items: start;
-  gap: clamp(18px, 2.7vw, 34px);
+  gap: clamp(12px, 1.8vw, 22px);
   width: min(100%, 1240px);
   margin-left: auto;
 }
@@ -135,11 +135,11 @@ body {
   width: 100%;
   margin-left: auto;
   border: 4px solid var(--green);
-  border-radius: 28px;
+  border-radius: 20px;
   overflow: hidden;
   background: var(--cell-light);
   flex: 1 1 auto;
-  min-height: 300px;
+  min-height: 240px;
   box-shadow: 0 8px 24px rgba(79, 29, 188, 0.12);
 }
 
@@ -150,7 +150,7 @@ body {
 }
 
 .controls {
-  margin: 2px 0 0;
+  margin: 0;
   display: flex;
   gap: 16px;
   align-items: center;
@@ -169,7 +169,7 @@ button {
 
 .controls p {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   color: #4f1dbc;
   font-weight: 600;
 }
@@ -209,8 +209,8 @@ button {
   background: #ffffff;
   color: #4a1eb2;
   border: 3px solid var(--blue);
-  border-radius: 28px;
-  padding: 12px 16px;
+  border-radius: 20px;
+  padding: 9px 12px;
   position: relative;
   box-shadow: 0 6px 18px rgba(90, 183, 217, 0.2);
 }
@@ -230,13 +230,13 @@ button {
 
 .bubble p {
   margin: 0;
-  font-size: clamp(15px, 1.4vw, 20px);
+  font-size: clamp(13px, 1.1vw, 16px);
   font-weight: 700;
   line-height: 1.12;
 }
 
 .dino {
-  width: clamp(92px, 11vw, 140px);
+  width: clamp(76px, 9vw, 110px);
   height: auto;
   transform: scaleX(-1);
 }
@@ -256,7 +256,7 @@ button {
 
 .logic-text {
   margin: 0;
-  font-size: clamp(18px, 1.6vw, 26px);
+  font-size: clamp(14px, 1.2vw, 18px);
   color: #1d253c;
 }
 
@@ -275,37 +275,37 @@ button {
 .animals-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(220px, 1fr));
-  gap: 14px;
+  gap: 10px;
 }
 
 .animal-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px;
+  gap: 6px;
+  padding: 10px;
   border-radius: 18px;
   background: #fff;
   border: 2px solid #dce8ff;
 }
 
 .animal-name {
-  font-size: clamp(22px, 2.2vw, 34px);
+  font-size: clamp(18px, 1.7vw, 24px);
 }
 
 .animal-floor {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: clamp(24px, 2.4vw, 36px);
+  font-size: clamp(18px, 1.8vw, 24px);
   color: #1d253c;
 }
 
 .animal-floor input {
-  width: 52px;
-  height: 44px;
+  width: 42px;
+  height: 36px;
   border-radius: 12px;
   border: 2px solid #7bc4dd;
-  font-size: 28px;
+  font-size: 22px;
   text-align: center;
   color: #1d253c;
 }
@@ -316,9 +316,9 @@ button {
 
 .logic-success {
   margin: 0;
-  min-height: 32px;
+  min-height: 24px;
   color: #119a6c;
-  font-size: clamp(20px, 1.8vw, 28px);
+  font-size: clamp(16px, 1.3vw, 20px);
   font-weight: 700;
 }
 

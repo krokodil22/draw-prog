@@ -119,12 +119,12 @@ function getBoardGeometry() {
     return sum + block.offsetHeight + marginTop + marginBottom;
   }, 0);
 
-  const freeHeight = window.innerHeight - canvas.getBoundingClientRect().top - bottomSpace - 16;
-  const availableHeight = Math.max(240, Math.floor(freeHeight));
+  const freeHeight = window.innerHeight - canvas.getBoundingClientRect().top - bottomSpace - 10;
+  const availableHeight = Math.max(200, Math.floor(freeHeight));
 
   const fitByWidth = Math.floor(availableWidth / cols);
   const fitByHeight = Math.floor(availableHeight / rows);
-  cell = Math.max(24, Math.min(fitByWidth, fitByHeight));
+  cell = Math.max(18, Math.min(fitByWidth, fitByHeight));
 
   return {
     width: cols * cell,
