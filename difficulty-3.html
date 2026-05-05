@@ -1,95 +1,41 @@
 <!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Клавиатурный тренажёр</title>
-  <style>
-    :root{--bg:#f1f5f9; --panel:#fff; --text:#0f172a; --sub:#475569; --accent:#10b981; --violet:#7c3aed; --border:#e2e8f0; --pink:#ec4899;}
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto; color:var(--text); background:var(--bg); display:flex; flex-direction:column; align-items:center}
-    .wrap{width:min(1100px,100%); padding:24px 16px; position:relative}
-    header{display:flex; align-items:center; justify-content:space-between}
-    h1{margin:0; font-size:28px}
-    .tag{background:#f1f5f9; border:1px solid var(--border); padding:6px 10px; border-radius:12px; font-size:14px}
-    .controls{display:flex; gap:8px; margin:14px 0 0 0; align-items:center; flex-wrap:wrap}
-    .btn{border:none; border-radius:12px; padding:8px 12px; background:#111827; color:#fff; font-weight:600; cursor:pointer; position:relative}
-    .btn.level-locked{background:#e5e7eb; color:#94a3b8}
-    .btn.level-locked::after{content:"🔒"; position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:14px}
-    .btn.level-passed{background:#bbf7d0; color:#065f46}
-    .btn.level-current{background:#bfdbfe; color:#1e3a8a}
-    .btn.level-open{background:#e5e7eb; color:#334155}
-    .select{appearance:none; background:var(--panel); border:1px solid var(--border); color:var(--text); padding:8px 36px 8px 12px; border-radius:10px; font-weight:600; position:relative}
-    .select-wrap{position:relative}
-    .select-wrap::after{content:"▾"; position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--sub); font-size:12px; pointer-events:none;}
-    .arena{position:relative; margin-top:18px; height:260px; border:1px solid var(--border); border-radius:18px; background:linear-gradient(90deg, #e2e8f0, #f8fafc); overflow:hidden}
-    .fly{position:absolute; left:0; top:50%; transform:translateY(-50%); font-weight:900; font-size:46px; background:var(--violet); color:white; padding:10px 20px; border-radius:16px; box-shadow:0 10px 30px rgba(124,58,237,.25)}
-    .arena-hint{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:var(--sub); font-size:18px; opacity:.95; text-align:center; pointer-events:none}
-    .overlay{position:absolute; inset:0; background:rgba(0,0,0,.4); display:none; align-items:center; justify-content:center}
-    .card{background:#ffffff; color:#0f172a; border:1px solid var(--border); border-radius:16px; padding:20px; text-align:center}
-    .kbd-outer{width:100%; display:flex; justify-content:center; overflow:visible}
-    .kbd{margin:28px 0 10px; display:flex; flex-direction:column; gap:10px; align-items:center; width:920px; transform-origin: top center}
-    .row{display:flex; gap:8px; justify-content:center; flex-wrap:nowrap}
-    .key{min-width:42px; padding:10px 12px; text-align:center; border:1px solid var(--border); border-radius:14px; background:var(--panel); color:var(--text); cursor:pointer; user-select:none}
-    .key:hover{background:#f1f5f9}
-    .key.active{background:var(--violet); color:white; box-shadow:0 6px 20px rgba(124,58,237,.35); animation:pulse 1s infinite}
-    .key.wrong{background:#ef4444; color:#fff; border-color:#dc2626; box-shadow:0 6px 16px rgba(239,68,68,.45)}
-    .spacekey{min-width:260px}
-    .kbd .key { pointer-events: none; }
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-    .lives{display:flex; gap:8px; align-items:center}
-    .heart{width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center}
-    .heart svg{width:34px; height:34px; display:block}
-    .heart .shape{stroke:var(--pink); stroke-width:2; fill:none}
-    .heart.filled .shape{fill:var(--pink)}
-    .dino{position:fixed; bottom:0; pointer-events:none; user-select:none}
-    .dino-left{left:0; width:180px}
-    .dino-right{right:0; width:200px}
-    @media (max-width:768px){.dino{display:none}}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <div style="display:flex; align-items:center; gap:10px">
-        <img src="logo.webp" alt="logo" style="height:32px; width:auto" />
-        <h1>Клавиатурный тренажёр</h1>
-      </div>
-      <div style="display:flex; gap:16px; align-items:center">
-        <div class="select-wrap" id="difficultySwitchWrap">
-          <select id="difficultySel" class="select">
-                        <option value="difficulty-1.html" >Сложность 1</option><option value="difficulty-2.html" >Сложность 2</option><option value="difficulty-3.html" selected>Сложность 3</option><option value="difficulty-4.html" >Сложность 4</option><option value="difficulty-5.html" >Сложность 5</option><option value="difficulty-6.html" >Сложность 6</option><option value="difficulty-7.html" >Сложность 7</option></select>
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Клавиатурный тренажёр</title>
+    <style>
+      :root { --bg:#f8fafc; --panel:#fff; --text:#0f172a; --violet:#7c3aed; --border:#e2e8f0; --pink:#ec4899; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family: Arial, sans-serif; background:var(--bg); color:var(--text); }
+      .wrap { width:min(980px,100%); margin:0 auto; padding:16px; }
+      .stats { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+      .tag { background:#fff; border:1px solid var(--border); border-radius:12px; padding:6px 10px; font-weight:700; }
+      .arena { position:relative; height:220px; border:1px solid var(--border); border-radius:16px; background:linear-gradient(90deg,#e2e8f0,#f8fafc); overflow:hidden; }
+      .fly { position:absolute; left:0; top:50%; transform:translateY(-50%); font-weight:900; font-size:42px; background:var(--violet); color:#fff; padding:10px 18px; border-radius:14px; }
+      .hint { position:absolute; inset:auto 0 16px; text-align:center; color:#475569; font-weight:700; }
+      .kbd { margin-top:16px; display:flex; flex-direction:column; gap:8px; align-items:center; }
+      .row { display:flex; gap:8px; }
+      .key { min-width:40px; padding:9px 10px; border:1px solid var(--border); border-radius:10px; background:var(--panel); font-weight:700; }
+      .key.active { background:var(--violet); color:#fff; }
+      .key.wrong { background:#ef4444; color:#fff; }
+      .space { min-width:220px; }
+      .lives{display:flex;gap:6px}
+      .heart{width:28px;height:28px;border:2px solid var(--pink);border-radius:50%;display:inline-block}
+      .heart.full{background:var(--pink)}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="stats">
         <div class="lives" id="lives"></div>
-        <div class="tag" id="scoreTag">Очки: 0</div>
+        <div class="tag" id="score">Очки: 0</div>
       </div>
-    </header>
-
-    <div class="controls">
-      <div>
-        <button class="btn" data-level="1">Уровень 1</button>
-        <button class="btn" data-level="2">Уровень 2</button>
-        <button class="btn" data-level="3">Уровень 3</button>
-        <button class="btn" data-level="4">Уровень 4</button>
-        <button class="btn" data-level="5">Уровень 5</button>
-        <button class="btn" data-level="6">Уровень 6</button>
-        <button class="btn" data-bonus="1">Бонус ∞</button>
+      <div class="arena" id="arena">
+        <div class="fly" id="fly">Ф</div>
+        <div class="hint" id="hint">Нажми ПРОБЕЛ, чтобы начать</div>
       </div>
-    </div>
-
-    <div class="arena" id="arena">
-      <div class="arena-hint" id="arenaHint">Чтобы начать, нажмите на ПРОБЕЛ</div>
-      <div class="fly" id="fly" style="left:0">Ф</div>
-      <div class="overlay" id="over">
-        <div class="card">
-          <div id="overlayTitle" style="font-size:26px; font-weight:800; margin-bottom:6px; color:#0f172a;">Игра окончена</div>
-          <div id="finalScore" style="margin-bottom:12px">Ваш счёт: 0</div>
-          <div style="display:flex; gap:8px; justify-content:center">
-            <button class="btn" id="retryBtn">Сыграть сначала</button>
-            <button class="btn" id="nextBtn" style="display:none">Перейти на следующий</button>
-          </div>
-        </div>
-      </div>
+      <div class="kbd" id="kbd"></div>
     </div>
 
     <div class="kbd-outer"><div class="kbd" id="kbd"></div></div>
