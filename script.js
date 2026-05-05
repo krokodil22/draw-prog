@@ -15,6 +15,7 @@ const monstersSuccessMessage = document.getElementById('monsters-success');
 const trainerStartButton = document.getElementById('trainer-start');
 const trainerWrap = document.getElementById('trainer-wrap');
 const trainerFrame = trainerWrap?.querySelector('iframe');
+const trainerStartOverlay = document.getElementById('trainer-start-overlay');
 
 const STORAGE_KEY = 'draw-prog-progress-v1';
 const progress = loadProgress();
@@ -128,12 +129,16 @@ resizeBoard();
 // чтобы не сбрасывать сохранённую отметку «Выполнено».
 
 
-if (trainerStartButton && trainerWrap && trainerFrame) {
+if (trainerStartButton && trainerWrap && trainerFrame && trainerStartOverlay) {
   trainerStartButton.addEventListener('click', () => {
-    if (!trainerFrame.src) {
-      trainerFrame.src = trainerFrame.dataset.src || 'difficulty-3.html';
+    trainerWrap.classList.remove('trainer-wrap--locked');
+    trainerStartOverlay.hidden = true;
+    trainerFrame.contentWindow?.focus();
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if (!trainerStartOverlay.hidden && event.code === 'Space') {
+      event.preventDefault();
     }
-    trainerWrap.hidden = false;
-    trainerStartButton.hidden = true;
   });
 }
