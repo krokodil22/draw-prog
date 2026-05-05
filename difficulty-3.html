@@ -10,6 +10,10 @@
       body { margin:0; font-family: Arial, sans-serif; background:var(--bg); color:var(--text); }
       .wrap { width:min(980px,100%); margin:0 auto; padding:16px; }
       .stats { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+      .levels{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+      .level-chip{min-width:32px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;color:#64748b;font-weight:700;text-align:center}
+      .level-chip.current{border-color:var(--violet);color:var(--violet);background:#f5f3ff}
+      .level-chip.done{border-color:#16a34a;background:#dcfce7;color:#166534}
       .tag { background:#fff; border:1px solid var(--border); border-radius:12px; padding:6px 10px; font-weight:700; }
       .arena { position:relative; height:220px; border:1px solid var(--border); border-radius:16px; background:linear-gradient(90deg,#e2e8f0,#f8fafc); overflow:hidden; }
       .fly { position:absolute; left:0; top:50%; transform:translateY(-50%); font-weight:900; font-size:42px; background:var(--violet); color:#fff; padding:10px 18px; border-radius:14px; }
@@ -34,6 +38,7 @@
       <div class="stats">
         <div class="lives" id="lives"></div>
         <div class="tag" id="scoreTag">Очки: 0</div>
+        <div class="levels" id="levels"></div>
       </div>
       <div class="arena" id="arena">
         <div class="fly" id="fly">Ф</div>
@@ -63,7 +68,7 @@
   const LETTER_ORDER = ["О","Е","А","И","Н","Т","С","Р","В","Л","К","М","Д","П","У","Я","Ы","Ь","Г","З","Б","Ч","Й","Х","Ж","Ш","Ю","Ц","Щ","Э","Ф","Ъ","Ё"];
   const LEVEL_SIZES = {1:12,2:16,3:20,4:24,5:27,6:30};
   const SPEED = {1:105,2:125,3:145,4:165,5:185,6:205,7:225};
-  const START_LIVES=4, RIGHT_PAD=24, TARGET_SCORE=20;
+  const START_LIVES=5, RIGHT_PAD=24, TARGET_SCORE=20;
 
   const fly=document.getElementById('fly');
   const arena=document.getElementById('arena');
@@ -76,6 +81,7 @@
   const nextBtn=document.getElementById('nextBtn');
   const arenaHint=document.getElementById('arenaHint');
   const kbd=document.getElementById('kbd');
+  const levelsEl=document.getElementById('levels');
 
   const keyButtons=new Map();
   RU_LAYOUT.forEach(row=>{ const rowEl=document.createElement('div'); rowEl.className='row';
@@ -102,7 +108,16 @@
   function highlight(){ keyButtons.forEach((b,l)=> b.classList.toggle('active', running && !levelComplete && l===target)); document.getElementById('spaceKey').classList.toggle('active', !running); }
   function randomNext(){ const pool = setLetters.length ? setLetters : LETTER_ORDER; let next = pool[Math.floor(Math.random()*pool.length)]; if(pool.length>1 && next===lastTarget){ next = pool[(pool.indexOf(next)+1)%pool.length]; } target=next; lastTarget=next; }
   function spawn(){ const w=arena.clientWidth||800; x=w-RIGHT_PAD; randomNext(); fly.textContent=target; fly.style.left=x+'px'; highlight(); }
-  function setLevel(n){ level=n; setLetters=lettersForLevelNum(n); resetRound(); }
+  function renderLevels(){
+    levelsEl.innerHTML='';
+    for(let i=1;i<=6;i++){
+      const chip=document.createElement('span');
+      chip.className='level-chip'+(i<level?' done':'')+(i===level?' current':'');
+      chip.textContent='У'+i;
+      levelsEl.appendChild(chip);
+    }
+  }
+  function setLevel(n){ level=n; setLetters=lettersForLevelNum(n); renderLevels(); resetRound(); }
   function start(){ if(running||levelComplete) return; if(lives<=0){ lives=START_LIVES; score=0; updateScore(); } running=true; arenaHint.style.display='none'; overlay.style.display='none'; lastTs=null; highlight(); }
   function gameOver(){ running=false; overlay.style.display='flex'; overlayTitle.textContent='Игра окончена'; finalScore.textContent='Ваш счёт: '+score; retryBtn.style.display='inline-block'; nextBtn.style.display='none'; highlight(); }
   function updateScore(){ scoreTag.textContent='Очки: '+score; if(score>=TARGET_SCORE && !levelComplete){ levelComplete=true; running=false; overlay.style.display='flex'; overlayTitle.textContent='Уровень пройден!'; finalScore.textContent='Очки: '+score; retryBtn.style.display='none'; nextBtn.style.display= level<6 ? 'inline-block':'none'; } }
