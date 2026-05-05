@@ -119,6 +119,6 @@ completionModal.addEventListener('click',(event)=>{if(event.target===completionM
 hydrateTaskBadges();
 restoreProgress();
 resizeBoard();
-updateSuccessText();
-checkLogicTask();
-checkMonsterTask();
+
+// Не пересчитываем статусы задач при загрузке страницы,
+// чтобы не сбрасывать сохранённую отметку «Выполнено».
