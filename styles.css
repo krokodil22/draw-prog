@@ -322,6 +322,24 @@ button {
 }
 
 
+
+.trainer-wrap {
+  width: 100%;
+  min-height: clamp(520px, 80vh, 920px);
+  border: 2px solid #dce8ff;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.trainer-wrap iframe {
+  width: 100%;
+  height: clamp(520px, 80vh, 920px);
+  border: 0;
+  display: block;
+}
+
+
 .video-wrap {
   width: min(100%, 720px);
 }
