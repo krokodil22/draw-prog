@@ -12,6 +12,11 @@ const houseSlots = document.querySelectorAll('.house-slot');
 const monstersResetButton = document.getElementById('monsters-reset');
 const monstersSuccessMessage = document.getElementById('monsters-success');
 
+const trainerStartButton = document.getElementById('trainer-start');
+const trainerWrap = document.getElementById('trainer-wrap');
+const trainerFrame = trainerWrap?.querySelector('iframe');
+const trainerStartOverlay = document.getElementById('trainer-start-overlay');
+
 const STORAGE_KEY = 'draw-prog-progress-v1';
 const progress = loadProgress();
 
@@ -122,3 +127,18 @@ resizeBoard();
 
 // Не пересчитываем статусы задач при загрузке страницы,
 // чтобы не сбрасывать сохранённую отметку «Выполнено».
+
+
+if (trainerStartButton && trainerWrap && trainerFrame && trainerStartOverlay) {
+  trainerStartButton.addEventListener('click', () => {
+    trainerWrap.classList.remove('trainer-wrap--locked');
+    trainerStartOverlay.hidden = true;
+    trainerFrame.contentWindow?.focus();
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if (!trainerStartOverlay.hidden && event.code === 'Space') {
+      event.preventDefault();
+    }
+  });
+}

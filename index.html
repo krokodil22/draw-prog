@@ -139,9 +139,12 @@
       <section class="task" aria-label="Задание 4">
         <h2 class="task-title">Задание 4</h2>
         <h3 class="task-headline">Клавиатурный тренажёр: пройди уровни 1–6 и закрепи навык печати.</h3>
-        <p class="logic-text">Чтобы выполнить задание, <b>нажимай клавиши на клавиатуре</b>. <br> Нажми пробел для старта. Если тренажер не работает, проверь, что у тебя включен русский язык клавиатуры, а также выключен CapsLock. <br> Проходи уровни, набирай очки и переходи дальше.</p>
-        <div class="trainer-wrap">
+        <p class="logic-text">Чтобы выполнить задание, <b>нажимай клавиши на клавиатуре</b>. <br> Сначала нажми кнопку «Начать», затем в тренажёре нажми пробел для старта. Если тренажер не работает, проверь, что у тебя включен русский язык клавиатуры, а также выключен CapsLock. <br> Проходи уровни, набирай очки и переходи дальше.</p>
+        <div class="trainer-wrap trainer-wrap--locked" id="trainer-wrap">
           <iframe src="difficulty-3.html" title="Клавиатурный тренажёр" loading="lazy"></iframe>
+          <div class="trainer-start-overlay" id="trainer-start-overlay">
+            <button id="trainer-start" type="button">Начать</button>
+          </div>
         </div>
       </section>
 
