@@ -37,25 +37,131 @@
       </div>
       <div class="kbd" id="kbd"></div>
     </div>
-    <script>
-      const layout=[["Й","Ц","У","К","Е","Н","Г","Ш","Щ","З","Х"],["Ф","Ы","В","А","П","Р","О","Л","Д","Ж","Э"],["Я","Ч","С","М","И","Т","Ь","Б","Ю"]];
-      const letters=["О","Е","А","И","Н","Т","С","Р","В","Л","К","М","Д","П","У","Я","Ы","Ь","Г","З","Б","Ч","Й","Х","Ж","Ш","Ю","Ц","Щ","Э","Ф"];
-      const fly=document.getElementById('fly'), arena=document.getElementById('arena'), hint=document.getElementById('hint');
-      const scoreEl=document.getElementById('score'), livesEl=document.getElementById('lives');
-      const kbd=document.getElementById('kbd');
-      let x=0, running=false, target='Ф', score=0, lives=4, lastTs=null;
-      const keyMap=new Map();
-      layout.forEach(r=>{const row=document.createElement('div');row.className='row';r.forEach(k=>{const b=document.createElement('button');b.className='key';b.textContent=k;row.appendChild(b);keyMap.set(k,b)});kbd.appendChild(row)});
-      const sr=document.createElement('div');sr.className='row';const sb=document.createElement('button');sb.className='key space';sb.textContent='Пробел';sr.appendChild(sb);kbd.appendChild(sr);
-      function renderLives(){livesEl.innerHTML='';for(let i=0;i<4;i++){const h=document.createElement('span');h.className='heart'+(i<lives?' full':'');livesEl.appendChild(h)}}
-      function pick(){target=letters[Math.floor(Math.random()*letters.length)];fly.textContent=target;keyMap.forEach((b,l)=>b.classList.toggle('active',l===target));}
-      function spawn(){x=arena.clientWidth-70;fly.style.left=x+'px';pick();}
-      function reset(){running=false;score=0;lives=4;scoreEl.textContent='Очки: 0';renderLives();hint.textContent='Нажми ПРОБЕЛ, чтобы начать';spawn();}
-      function lose(){lives--;renderLives();if(lives<=0){running=false;hint.textContent='Игра окончена! Нажми ПРОБЕЛ для новой попытки';}}
-      function loop(ts){if(!running){requestAnimationFrame(loop);return;} if(lastTs==null)lastTs=ts; const dt=(ts-lastTs)/1000;lastTs=ts; x-=170*dt;fly.style.left=x+'px'; if(x<=8){lose();spawn();} requestAnimationFrame(loop)}
-      function press(ch){ if(!running) return; const k=(ch||'').toLocaleUpperCase('ru'); if(k===target){score++;scoreEl.textContent='Очки: '+score;spawn();} else if(keyMap.has(k)){const b=keyMap.get(k);b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),180);lose();}}
-      window.addEventListener('keydown',e=>{ if(e.code==='Space'){e.preventDefault(); if(!running){running=true;hint.textContent='';lastTs=null;} else press(' ');} else press(e.key);});
-      renderLives(); spawn(); requestAnimationFrame(loop);
-    </script>
-  </body>
+
+    <div class="kbd-outer"><div class="kbd" id="kbd"></div></div>
+
+    <img src="dino2.png" class="dino dino-left" alt="Дино 2" />
+    <img src="dino2.png" class="dino dino-right" alt="Дино 1" />
+  </div>
+<script>
+(function(){
+  const RU_LAYOUT = [
+    ["Ё","Й","Ц","У","К","Е","Н","Г","Ш","Щ","З","Х","Ъ"],
+    ["Ф","Ы","В","А","П","Р","О","Л","Д","Ж","Э"],
+    ["Я","Ч","С","М","И","Т","Ь","Б","Ю","."]
+  ];
+  const LETTER_ORDER = ["О","Е","А","И","Н","Т","С","Р","В","Л","К","М","Д","П","У","Я","Ы","Ь","Г","З","Б","Ч","Й","Х","Ж","Ш","Ю","Ц","Щ","Э","Ф","Ъ","Ё"];
+  const LEVEL_SIZES = {1:12,2:16,3:20,4:24,5:27,6:30};
+  const SPEED = {1:105,2:125,3:145,4:165,5:185,6:205,7:225};
+  const START_LIVES=4, RIGHT_PAD=24, TARGET_SCORE=20;
+  const STORAGE_PREFIX="kt_d3";
+  const REPEAT_CHANCE = {1:0.24,2:0.2,3:0.16,4:0.12,5:0.08,6:0.05,7:0.04};
+
+  function sget(k){ try{return localStorage.getItem(STORAGE_PREFIX+'_'+k);}catch(e){return null;} }
+  function sset(k,v){ try{localStorage.setItem(STORAGE_PREFIX+'_'+k, String(v));}catch(e){} }
+
+  const fly=document.getElementById('fly'), arena=document.getElementById('arena'), livesEl=document.getElementById('lives'),
+        scoreTag=document.getElementById('scoreTag'), overlay=document.getElementById('over'),
+        overlayTitle=document.getElementById('overlayTitle'), finalScore=document.getElementById('finalScore'),
+        retryBtn=document.getElementById('retryBtn'), nextBtn=document.getElementById('nextBtn'),
+        arenaHint=document.getElementById('arenaHint'), kbd=document.getElementById('kbd');
+
+  const keyButtons=new Map();
+  RU_LAYOUT.forEach(row=>{ const rowEl=document.createElement('div'); rowEl.className='row';
+    row.forEach(k=>{ const b=document.createElement('button'); b.className='key'; b.textContent=k;
+      b.addEventListener('click',()=>handleInput(k)); rowEl.appendChild(b); keyButtons.set(k,b); });
+    kbd.appendChild(rowEl);
+  });
+  const spaceRow=document.createElement('div'); spaceRow.className='row';
+  const spaceBtn=document.createElement('button'); spaceBtn.className='key spacekey'; spaceBtn.textContent='Пробел'; spaceBtn.id='spaceKey';
+  spaceBtn.addEventListener('click',()=>{ if(running) handleInput(' '); else start(); }); spaceRow.appendChild(spaceBtn); kbd.appendChild(spaceRow);
+
+  function applyKbdScale(){ const outer=document.querySelector('.kbd-outer'); const inner=document.querySelector('.kbd');
+    if(!outer||!inner) return; const available=outer.clientWidth; const base=920;
+    const s=Math.min(1, Math.max(0.6, available/base)); inner.style.transform='scale('+s+')'; }
+  window.addEventListener('resize', applyKbdScale); applyKbdScale();
+
+  let level=1,isBonus=false,setLetters=[],running=false,levelComplete=false,unlockedLevelMax=1;
+  let x=0,lastTs=null,req=null,lives=START_LIVES,score=0,target='Ф',lastTarget='';
+
+  function lettersForLevelNum(n){
+    const size = LEVEL_SIZES[n] || LEVEL_SIZES[6] || LETTER_ORDER.length;
+    return LETTER_ORDER.slice(0, Math.min(size, LETTER_ORDER.length));
+  }
+  function lettersForPassed(unlocked){ const u=Math.min(Math.max(unlocked,1),6); return lettersForLevelNum(u); }
+
+  function makeHeart(f){ const el=document.createElement('span'); el.className='heart'+(f?' filled':''); el.innerHTML='<svg viewBox="0 0 24 24"><path class="shape" d="M12 21s-6.7-4.3-9.2-6.8C.2 11.6.2 8.4 2.8 5.8c2.1-2.1 5.6-2.1 7.7 0L12 7.4l1.5-1.5c2.1-2.1 5.6-2.1 7.7 0 2.6 2.6 2.6 5.8 0 8.3C18.7 16.7 12 21 12 21z"/></svg>'; return el; }
+  function renderLives(){ livesEl.innerHTML=''; for(let i=0;i<START_LIVES;i++) livesEl.appendChild(makeHeart(i<lives)); }
+
+  function updateLevelLocks(){
+    document.querySelectorAll('[data-level]').forEach(btn=>{
+      const lvl=+btn.dataset.level;
+      btn.classList.remove('level-locked','level-passed','level-current','level-open');
+      if(lvl > Math.min(unlockedLevelMax,6)){ btn.disabled=true; btn.classList.add('level-locked'); }
+      else{
+        btn.disabled=false;
+        if(lvl===level && !isBonus) btn.classList.add('level-current');
+        else if(lvl < unlockedLevelMax) btn.classList.add('level-passed');
+        else btn.classList.add('level-open');
+      }
+    });
+    const bonusBtn=document.querySelector('[data-bonus]');
+    if(bonusBtn){
+      bonusBtn.classList.remove('level-locked','level-passed','level-current','level-open');
+      if(unlockedLevelMax>=7){ bonusBtn.disabled=false; isBonus?bonusBtn.classList.add('level-current'):bonusBtn.classList.add('level-passed'); }
+      else { bonusBtn.disabled=true; bonusBtn.classList.add('level-locked'); }
+    }
+  }
+
+  function up(s){ return (s||'').toLocaleUpperCase('ru'); }
+  function highlight(){ keyButtons.forEach((b,l)=>{ if(running && !levelComplete && l===target) b.classList.add('active'); else b.classList.remove('active'); }); const sp=document.getElementById('spaceKey'); if((!running && !levelComplete) || (running && target===' ')) sp.classList.add('active'); else sp.classList.remove('active'); }
+  function randomNext(){ const pool = setLetters.length ? setLetters : LETTER_ORDER; const repeatChance = REPEAT_CHANCE[isBonus?7:level] ?? 0.05; let next = pool[Math.floor(Math.random()*pool.length)]; if(pool.length>1 && lastTarget && next===lastTarget && Math.random()>repeatChance){ let guard=0; while(next===lastTarget && guard<12){ next = pool[Math.floor(Math.random()*pool.length)]; guard++; } } target=next; lastTarget=target; }
+  function spawn(){ const w=arena.clientWidth||800; x=w-RIGHT_PAD; randomNext(); fly.textContent=target; fly.style.left=x+'px'; highlight(); }
+
+  function setLevel(n){ isBonus=false; level=n; setLetters=lettersForLevelNum(n); lastTs=null; resetRound(); updateLevelLocks(); saveProgress(); }
+  function setBonus(){ isBonus=true; setLetters=lettersForPassed(unlockedLevelMax); lastTs=null; resetRound(); updateLevelLocks(); saveProgress(); }
+
+  function showDefaultHint(){ arenaHint.textContent='Чтобы начать, нажмите на ПРОБЕЛ'; }
+  function showStartHint(){ arenaHint.textContent='Чтобы запустить тренажёр, отключите Caps Lock и переключите раскладку на русский'; arenaHint.style.display='block'; }
+  function start(){ if(running||levelComplete) return; if(lives<=0){ lives=START_LIVES; score=0; updateScore(); } running=true; arenaHint.style.display='none'; document.getElementById('spaceKey').classList.remove('active'); overlay.style.display='none'; lastTs=null; if(!req) req=requestAnimationFrame(loop); highlight(); }
+  function gameOver(){ running=false; overlay.style.display='flex'; highlight(); overlayTitle.textContent='Игра окончена'; finalScore.textContent='Ваш счёт: '+score; retryBtn.style.display='inline-block'; nextBtn.style.display='none'; }
+
+  function updateScore(){ scoreTag.textContent='Очки: '+score; if(!isBonus && score>=TARGET_SCORE && !levelComplete){ levelComplete=true; running=false; arenaHint.style.display='none'; overlay.style.display='flex'; highlight(); if(level<6){ overlayTitle.textContent='Отлично! Ты прошёл уровень!'; finalScore.textContent='Очки: '+score; retryBtn.style.display='none'; nextBtn.style.display='inline-block'; nextBtn.textContent='Перейти на следующий'; if(unlockedLevelMax===level) unlockedLevelMax=Math.min(6,unlockedLevelMax+1); } else { overlayTitle.textContent='Поздравляем! Ты прошёл все уровни!'; finalScore.textContent='Можешь играть бесконечно!'; retryBtn.style.display='none'; nextBtn.style.display='inline-block'; nextBtn.textContent='Перейти в бесконечный'; unlockedLevelMax=7; } updateLevelLocks(); saveProgress(); } }
+  function flashWrongKey(letter){ const btn=keyButtons.get(letter); if(!btn) return; btn.classList.add('wrong'); clearTimeout(btn._wrongTimer); btn._wrongTimer=setTimeout(()=>btn.classList.remove('wrong'),220); }
+  function loseLife(){ if(!running) return; lives-=1; renderLives(); if(lives<=0) gameOver(); }
+  function handleInput(ch){ if(!running) return; const pressed=up(ch); if(pressed===target){ score+=1; updateScore(); spawn(); return; } if(keyButtons.has(pressed)){ flashWrongKey(pressed); loseLife(); } }
+  function loop(ts){ if(!running){ req=requestAnimationFrame(loop); return; } if(lastTs==null) lastTs=ts; const dt=(ts-lastTs)/1000; lastTs=ts; const baseSpeed=(SPEED[isBonus?7:level]||120); const bonusBoost=isBonus?Math.pow(1.2, Math.floor(score/10)):1; x-=(baseSpeed*bonusBoost)*dt; fly.style.left=x+'px'; if(x<=8){ loseLife(); spawn(); } req=requestAnimationFrame(loop); }
+  function resetRound(){ lives=START_LIVES; score=0; levelComplete=false; renderLives(); running=false; showDefaultHint(); arenaHint.style.display='block'; document.getElementById('spaceKey').classList.add('active'); spawn(); highlight(); }
+
+  function saveProgress(){ try{ sset('unlockedMax', unlockedLevelMax); sset('level', level); }catch(e){} }
+  function loadProgress(){ try{ const u=parseInt(sget('unlockedMax')||'1',10); const lv=parseInt(sget('level')||'1',10); if(!isNaN(u)) unlockedLevelMax=Math.min(Math.max(u,1),7); if(!isNaN(lv)) level=Math.min(Math.max(lv,1),6); }catch(e){} }
+
+  function isEnglishLetterKey(e){ return /^Key[A-Z]$/.test(e.code) && /^[A-Za-z]$/.test(e.key); }
+  function isRussianLetterKey(e){ return /^Key[A-Z]$/.test(e.code) && /^[А-Яа-яЁё]$/.test(e.key); }
+  let englishLayoutOn=false;
+
+  window.addEventListener('keydown', e=>{
+    if(isEnglishLetterKey(e)) englishLayoutOn=true;
+    if(isRussianLetterKey(e)) englishLayoutOn=false;
+
+    const capsOn = e.getModifierState && e.getModifierState('CapsLock');
+    if(!running && (capsOn || englishLayoutOn) && (e.code==='Space' || /^Key[A-Z]$/.test(e.code))){
+      showStartHint();
+      if(e.code==='Space') e.preventDefault();
+      return;
+    }
+
+    if(e.code==='Space'){ e.preventDefault(); if(running) handleInput(' '); else start(); } else handleInput(e.key);
+  });
+  document.querySelectorAll('[data-level]').forEach(btn=> btn.addEventListener('click', ()=> setLevel(+btn.dataset.level)));
+  const bonusBtn=document.querySelector('[data-bonus]'); if(bonusBtn) bonusBtn.addEventListener('click', ()=> setBonus());
+  retryBtn.addEventListener('click', ()=>{ overlay.style.display='none'; resetRound(); });
+  nextBtn.addEventListener('click', ()=>{ if(level<6) setLevel(level+1); else setBonus(); overlay.style.display='none'; resetRound(); });
+
+  const difficultySwitchWrap=document.getElementById('difficultySwitchWrap'); const hasDifficultyNav=(new URLSearchParams(window.location.search)).get('nav')==='1'; if(difficultySwitchWrap && !hasDifficultyNav){ difficultySwitchWrap.style.display='none'; } const diffSel=document.getElementById('difficultySel'); if(diffSel && hasDifficultyNav){ diffSel.addEventListener('change',(e)=>{ const v=e.target.value; if(v){ const nextUrl=new URL(v, window.location.href); nextUrl.searchParams.set('nav','1'); window.location.href=nextUrl.toString(); } }); }
+
+  loadProgress(); setLevel(level); updateLevelLocks(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
 </html>
