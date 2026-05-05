@@ -19,7 +19,7 @@
       .fly { position:absolute; left:0; top:50%; transform:translateY(-50%); font-weight:900; font-size:42px; background:var(--violet); color:#fff; padding:10px 18px; border-radius:14px; }
       .hint { position:absolute; inset:auto 0 16px; text-align:center; color:#475569; font-weight:700; }
       .kbd-outer { margin-top:16px; overflow:hidden; }
-      .kbd { margin-top:16px; display:flex; flex-direction:column; gap:8px; align-items:center; transform-origin: top center; }
+      .kbd { margin-top:16px; display:flex; flex-direction:column; gap:8px; align-items:center; transform-origin: top center; pointer-events:none; }
       .row { display:flex; gap:8px; }
       .key { min-width:40px; padding:9px 10px; border:1px solid var(--border); border-radius:10px; background:var(--panel); font-weight:700; }
       .key.active { background:var(--violet); color:#fff; }
@@ -86,12 +86,12 @@
   const keyButtons=new Map();
   RU_LAYOUT.forEach(row=>{ const rowEl=document.createElement('div'); rowEl.className='row';
     row.forEach(k=>{ const b=document.createElement('button'); b.className='key'; b.textContent=k;
-      b.addEventListener('click',()=>handleInput(k)); rowEl.appendChild(b); keyButtons.set(k,b); });
+      rowEl.appendChild(b); keyButtons.set(k,b); });
     kbd.appendChild(rowEl);
   });
   const spaceRow=document.createElement('div'); spaceRow.className='row';
   const spaceBtn=document.createElement('button'); spaceBtn.className='key spacekey'; spaceBtn.textContent='Пробел'; spaceBtn.id='spaceKey';
-  spaceBtn.addEventListener('click',()=>{ if(running) handleInput(' '); else start(); }); spaceRow.appendChild(spaceBtn); kbd.appendChild(spaceRow);
+  spaceRow.appendChild(spaceBtn); kbd.appendChild(spaceRow);
 
   function applyKbdScale(){ const outer=document.querySelector('.kbd-outer'); const inner=document.querySelector('.kbd');
     if(!outer||!inner) return; const available=outer.clientWidth; const base=920;
