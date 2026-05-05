@@ -12,6 +12,10 @@ const houseSlots = document.querySelectorAll('.house-slot');
 const monstersResetButton = document.getElementById('monsters-reset');
 const monstersSuccessMessage = document.getElementById('monsters-success');
 
+const trainerStartButton = document.getElementById('trainer-start');
+const trainerWrap = document.getElementById('trainer-wrap');
+const trainerFrame = trainerWrap?.querySelector('iframe');
+
 const STORAGE_KEY = 'draw-prog-progress-v1';
 const progress = loadProgress();
 
@@ -122,3 +126,14 @@ resizeBoard();
 
 // Не пересчитываем статусы задач при загрузке страницы,
 // чтобы не сбрасывать сохранённую отметку «Выполнено».
+
+
+if (trainerStartButton && trainerWrap && trainerFrame) {
+  trainerStartButton.addEventListener('click', () => {
+    if (!trainerFrame.src) {
+      trainerFrame.src = trainerFrame.dataset.src || 'difficulty-3.html';
+    }
+    trainerWrap.hidden = false;
+    trainerStartButton.hidden = true;
+  });
+}
