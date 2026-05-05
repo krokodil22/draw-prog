@@ -23,7 +23,8 @@ const progress = loadProgress();
 const taskElements = {
   draw: document.querySelector('section.task[aria-label="Задание 1"]'),
   logic: document.querySelector('section.task[aria-label="Задание 2"]'),
-  monsters: document.querySelector('section.task[aria-label="Задание 4"]'),
+  monsters: document.querySelector('section.task[aria-label="Задание 3"]'),
+  trainer: document.querySelector('section.task[aria-label="Задание 4"]'),
 };
 
 const cols = 16;
@@ -82,7 +83,7 @@ function hydrateTaskBadges() {
 function createFireworks() { fireworksContainer.innerHTML=''; for (let i=0;i<14;i+=1){const firework=document.createElement('span');firework.className='firework';firework.style.setProperty('--x',`${10+Math.random()*80}%`);firework.style.setProperty('--y',`${10+Math.random()*80}%`);firework.style.setProperty('--size',`${10+Math.random()*12}px`);firework.style.color=fireworkPalette[i%fireworkPalette.length];firework.style.animationDelay=`${Math.random()*1.5}s`;fireworksContainer.appendChild(firework);} }
 function closeCompletionModal(){completionModal.classList.remove('visible');}
 function celebrateAllTasks(){ if(allTasksCelebrated) return; allTasksCelebrated=true; createFireworks(); completionModal.classList.add('visible'); }
-function checkAllTasksCompletion(){ if(checkCompletion()&&checkLogicTask()&&checkMonsterTask()) celebrateAllTasks(); }
+function checkAllTasksCompletion(){ if(checkCompletion()&&checkLogicTask()&&checkMonsterTask()&&Boolean(progress.completed?.trainer)) celebrateAllTasks(); }
 
 function parseAlgorithm(rowsText){return rowsText.flatMap((rowText)=>{const matches=rowText.matchAll(/(\d+)([↑↓←→])/g);const expanded=[];for(const m of matches){const count=Number.parseInt(m[1],10);const unit=directionByArrow[m[2]];for(let i=0;i<count;i+=1) expanded.push({dx:unit.dx,dy:unit.dy});}return expanded;});}
 function buildPath(steps){let pointX=start.x;let pointY=start.y;const path=[];for(const step of steps){pointX+=step.dx;pointY+=step.dy;path.push({x:pointX,y:pointY});}return path;}
@@ -104,6 +105,15 @@ function checkLogicTask(){const allCorrect=Array.from(logicInputs).every((input)
 
 function resetMonsters(){const list=document.querySelector('.monster-list');monsters.forEach((monster)=>list.appendChild(monster));monstersSuccessMessage.textContent='';houseSlots.forEach((slot)=>slot.classList.remove('house-correct','house-wrong'));setTaskCompleted('monsters',false);}
 function checkMonsterTask(){const placed=Array.from(houseSlots).flatMap((slot)=>Array.from(slot.querySelectorAll('.monster')).map((monster)=>({house:slot.dataset.house,monster:monster.dataset.monster})));if(placed.length!==monsters.length){monstersSuccessMessage.textContent='';setTaskCompleted('monsters',false);return false;}const allCorrect=placed.every((p)=>monsterAnswers[p.monster]===p.house);houseSlots.forEach((slot)=>{const monster=slot.querySelector('.monster');if(!monster) return;const correctHouse=monsterAnswers[monster.dataset.monster];slot.classList.toggle('house-correct',correctHouse===slot.dataset.house);slot.classList.toggle('house-wrong',correctHouse!==slot.dataset.house);});monstersSuccessMessage.textContent=allCorrect?'Отлично! Все монстрики живут в правильных домиках!':'';setTaskCompleted('monsters',allCorrect);return allCorrect;}
+function handleTrainerProgressMessage(event) {
+  if (event.source !== trainerFrame?.contentWindow) return;
+  const data = event.data;
+  if (!data || data.type !== 'trainer-progress') return;
+  const trainerDone = Boolean(data.completed);
+  setTaskCompleted('trainer', trainerDone);
+  if (trainerDone) checkAllTasksCompletion();
+}
+
 function restoreProgress(){
   Object.entries(taskElements).forEach(([key, task]) => {
     if (!task) return;
@@ -120,6 +130,7 @@ window.addEventListener('resize',resizeBoard);
 resetButton.addEventListener('click',resetBoard);
 completionCloseButton.addEventListener('click',closeCompletionModal);
 completionModal.addEventListener('click',(event)=>{if(event.target===completionModal) closeCompletionModal();});
+window.addEventListener('message', handleTrainerProgressMessage);
 
 hydrateTaskBadges();
 restoreProgress();
