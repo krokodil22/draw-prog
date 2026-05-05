@@ -43,6 +43,36 @@ body {
   box-shadow: 0 8px 24px rgba(79, 29, 188, 0.1);
 }
 
+.task {
+  position: relative;
+}
+
+.task-done-badge {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: #e8fff3;
+  border: 2px solid #18c48a;
+  color: #0f8f64;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.task.task-completed {
+  background: #f2fff8;
+}
+
+.task.task-completed .task-done-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
