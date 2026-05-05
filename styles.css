@@ -614,3 +614,12 @@ button {
     opacity: 0;
   }
 }
+
+.success-overlay--error {
+  color: #cf2d2d;
+  box-shadow: 0 6px 18px rgba(207, 45, 45, 0.2);
+}
+
+.logic-success--error {
+  color: #cf2d2d;
+}
