@@ -99,6 +99,14 @@
   window.addEventListener('resize', applyKbdScale); applyKbdScale();
 
   let level=1,setLetters=[],running=false,levelComplete=false;
+
+  function reportTrainerProgress() {
+    window.parent.postMessage({
+      type: 'trainer-progress',
+      level,
+      completed: level > 6
+    }, '*');
+  }
   let x=0,lastTs=null,lives=START_LIVES,score=0,target='Ф',lastTarget='';
 
   function lettersForLevelNum(n){ const size = LEVEL_SIZES[n] || LEVEL_SIZES[6]; return LETTER_ORDER.slice(0, size); }
@@ -117,10 +125,10 @@
       levelsEl.appendChild(chip);
     }
   }
-  function setLevel(n){ level=n; setLetters=lettersForLevelNum(n); renderLevels(); resetRound(); }
+  function setLevel(n){ level=n; setLetters=lettersForLevelNum(n); renderLevels(); resetRound(); reportTrainerProgress(); }
   function start(){ if(running||levelComplete) return; if(lives<=0){ lives=START_LIVES; score=0; updateScore(); } running=true; arenaHint.style.display='none'; overlay.style.display='none'; lastTs=null; highlight(); }
   function gameOver(){ running=false; overlay.style.display='flex'; overlayTitle.textContent='Игра окончена'; finalScore.textContent='Ваш счёт: '+score; retryBtn.style.display='inline-block'; nextBtn.style.display='none'; highlight(); }
-  function updateScore(){ scoreTag.textContent='Очки: '+score; if(score>=TARGET_SCORE && !levelComplete){ levelComplete=true; running=false; overlay.style.display='flex'; overlayTitle.textContent='Уровень пройден!'; finalScore.textContent='Очки: '+score; retryBtn.style.display='none'; nextBtn.style.display= level<6 ? 'inline-block':'none'; } }
+  function updateScore(){ scoreTag.textContent='Очки: '+score; if(score>=TARGET_SCORE && !levelComplete){ levelComplete=true; running=false; overlay.style.display='flex'; overlayTitle.textContent='Уровень пройден!'; finalScore.textContent='Очки: '+score; retryBtn.style.display='none'; nextBtn.style.display= level<6 ? 'inline-block':'none'; if(level===6){ level=7; reportTrainerProgress(); } } }
   function flashWrongKey(letter){ const btn=keyButtons.get(letter); if(!btn) return; btn.classList.add('wrong'); setTimeout(()=>btn.classList.remove('wrong'),220); }
   function loseLife(){ if(!running) return; lives-=1; renderLives(); if(lives<=0) gameOver(); }
   function handleInput(ch){ if(!running) return; const pressed=up(ch); if(pressed===target){ score+=1; updateScore(); spawn(); return; } if(keyButtons.has(pressed)){ flashWrongKey(pressed); loseLife(); } }
@@ -129,7 +137,7 @@
 
   window.addEventListener('keydown', e=>{ if(e.code==='Space'){ e.preventDefault(); if(running) handleInput(' '); else start(); } else handleInput(e.key); });
   retryBtn.addEventListener('click', ()=>{ overlay.style.display='none'; resetRound(); });
-  nextBtn.addEventListener('click', ()=>{ if(level<6) setLevel(level+1); overlay.style.display='none'; });
+  nextBtn.addEventListener('click', ()=>{ if(level<6) setLevel(level+1); else { level=7; reportTrainerProgress(); } overlay.style.display='none'; });
 
   setLevel(1);
   requestAnimationFrame(loop);
